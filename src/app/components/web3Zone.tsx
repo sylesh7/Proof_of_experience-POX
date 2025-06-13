@@ -228,6 +228,8 @@ function NFTMinter() {
   const [eventTitle, setEventTitle] = useState("");
   const [mintingMethod, setMintingMethod] = useState<"safeMint" | "claim">("safeMint");
   const [mintedNFTs, setMintedNFTs] = useState<Array<{eventTitle: string; txHash: string; userAddress: string}>>([]);
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   
   const { writeContract, error: mintError, data: hash } = useWriteContract();
   
@@ -245,7 +247,7 @@ function NFTMinter() {
 
   // Handle successful minting
   useEffect(() => {
-    if (isConfirmed && mintTxHash && eventTitle && address) {
+    if (isConfirmed && mintTxHash && eventTitle && address && user?.email) {
       setIsMinting(false);
       
       // Add to minted NFTs list
@@ -255,11 +257,160 @@ function NFTMinter() {
         userAddress: address
       }]);
       
+      // Send email with transaction details
+      const sendEmail = async () => {
+        try {
+          const response = await fetch('/api/civic-nft-fallback', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              to: user.email,
+              eventTitle,
+              txHash: mintTxHash,
+              contractAddress: EVENT_TICKET_CONTRACT,
+              userAddress: address,
+              openseaLink: `https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`,
+              etherscanLink: `${SEPOLIA_CONFIG.blockExplorer}/tx/${mintTxHash}`
+            }),
+          });
+
+          const data = await response.json();
+          if (!data.success) {
+            console.error('Failed to send email:', data.error);
+          }
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      };
+
+      sendEmail();
+      
       // Reset form
       setEventTitle("");
       setMintTxHash(null);
     }
-  }, [isConfirmed, mintTxHash, eventTitle, address]);
+  }, [isConfirmed, mintTxHash, eventTitle, address, user?.email]);
+
+  // Modify the test function to be the get tickets function
+  const getTickets = async () => {
+    if (!user?.email || !mintTxHash) {
+      console.error('No user email or transaction hash available');
+      return;
+    }
+
+    setIsSendingEmail(true);
+    try {
+      const response = await fetch('/api/civic-nft-fallback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: user.email,
+          eventTitle,
+          txHash: mintTxHash,
+          contractAddress: EVENT_TICKET_CONTRACT,
+          userAddress: address,
+          openseaLink: `https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`,
+          etherscanLink: `${SEPOLIA_CONFIG.blockExplorer}/tx/${mintTxHash}`
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsEmailSent(true);
+        // Reset the success message after 5 seconds
+        setTimeout(() => {
+          setIsEmailSent(false);
+        }, 5000);
+      } else {
+        console.error('Failed to send email:', data.error);
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
+  // Modify the renderTestButton function
+  const renderGetTicketsButton = () => {
+    if (isConfirmed && mintTxHash) {
+      return (
+        <button
+          onClick={getTickets}
+          disabled={isSendingEmail}
+          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
+            ${isSendingEmail 
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transform hover:scale-105'
+            }`}
+        >
+          {isSendingEmail ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Sending Ticket...
+            </div>
+          ) : (
+            '🎫 Get My Tickets'
+          )}
+        </button>
+      );
+    }
+    return null;
+  };
+
+  // Add this test function
+  const testEmail = async () => {
+    if (!user?.email) {
+      console.error('No user email available');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/civic-nft-fallback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: user.email,
+          eventTitle: 'Test Event',
+          txHash: '0x123...', // Test transaction hash
+          contractAddress: EVENT_TICKET_CONTRACT,
+          userAddress: address || '0x123...',
+          openseaLink: `https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`,
+          etherscanLink: `${SEPOLIA_CONFIG.blockExplorer}/tx/0x123...`
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log('Test email sent successfully');
+      } else {
+        console.error('Failed to send test email:', data.error);
+      }
+    } catch (error) {
+      console.error('Error sending test email:', error);
+    }
+  };
+
+  // Add this button to your JSX, perhaps near the mint button
+  const renderTestButton = () => {
+    if (process.env.NODE_ENV === 'development') {
+      return (
+        <button
+          onClick={testEmail}
+          className="mt-4 w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
+        >
+          🧪 Test Email
+        </button>
+      );
+    }
+    return null;
+  };
 
   // Main minting function
   const mintEventTicket = useCallback(async () => {
@@ -488,6 +639,24 @@ function NFTMinter() {
         </div>
       </div>
 
+      {/* Replace the test button with the get tickets button */}
+      {renderGetTicketsButton()}
+      
+      {/* Add success message */}
+      {isEmailSent && (
+        <div className="mt-4 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
+          <div className="flex items-center">
+            <span className="text-green-500 mr-2">✅</span>
+            <p className="text-green-800 dark:text-green-200">
+              Ticket sent to your email successfully!
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Add this where you want the test button to appear */}
+      {renderTestButton()}
+      
       {/* Minted NFTs Display */}
       {mintedNFTs.length > 0 && (
         <div className="space-y-4">

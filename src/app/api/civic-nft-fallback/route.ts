@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
+
+// Initialize Resend with your API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -120,28 +124,10 @@ export async function POST(request: NextRequest) {
                  style="display: inline-block; background: #4f46e5; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; margin: 8px; font-weight: 600; font-size: 14px; transition: background 0.2s;">
                  🔍 View Transaction
               </a>
-              <a href="${openseaLink}" 
+              <a href="${openseaLink}"
                  style="display: inline-block; background: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; margin: 8px; font-weight: 600; font-size: 14px; transition: background 0.2s;">
                  🌊 View on OpenSea
               </a>
-            </div>
-
-            <!-- Info Box -->
-            <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #93c5fd; border-radius: 12px; padding: 20px;">
-              <div style="display: flex; align-items: flex-start;">
-                <span style="font-size: 20px; margin-right: 12px; margin-top: 2px;">💡</span>
-                <div>
-                  <h4 style="color: #1e40af; margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">
-                    What happens next?
-                  </h4>
-                  <ul style="color: #1e40af; margin: 0; padding-left: 16px; font-size: 14px; line-height: 1.6;">
-                    <li>Your NFT is securely stored in your Civic Auth wallet</li>
-                    <li>It may take 2-5 minutes to appear on OpenSea</li>
-                    <li>This serves as permanent proof of your event attendance</li>
-                    <li>You can view it anytime using the links above</li>
-                  </ul>
-                </div>
-              </div>
             </div>
 
             <!-- Transaction Hash -->
@@ -178,25 +164,33 @@ export async function POST(request: NextRequest) {
       </html>
     `;
 
-    // In a real implementation, you would use a proper email service here
-    // For now, we'll use a simple service or log the email
-    console.log(`📧 Fallback: Sending NFT email to ${to}`);
-    console.log(`📝 Subject: Your "${eventTitle}" Attendance NFT is Ready! 🎫`);
-    
-    // You can integrate with any email service here:
-    // - Resend, SendGrid, Nodemailer, etc.
-    
+    // Send email using Resend with test domain
+    const { data, error } = await resend.emails.send({
+      from: 'onboarding@resend.dev', // Using Resend's test domain
+      to: [to],
+      subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`,
+      html: emailHtml,
+    });
+
+    if (error) {
+      console.error('Failed to send email:', error);
+      return NextResponse.json(
+        { success: false, error: 'Failed to send email' },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({ 
       success: true, 
-      message: 'NFT email prepared (fallback mode)',
+      message: 'NFT email sent successfully',
       recipient: to,
       subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`
     });
 
   } catch (error) {
-    console.error('Fallback email failed:', error);
+    console.error('Email sending failed:', error);
     return NextResponse.json(
-      { success: false, error: 'Fallback email system failed' },
+      { success: false, error: 'Email system failed' },
       { status: 500 }
     );
   }
