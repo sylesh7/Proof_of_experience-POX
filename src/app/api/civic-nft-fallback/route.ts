@@ -89,7 +89,6 @@ export async function POST(request: NextRequest) {
       openseaLink, 
       etherscanLink,
       accessToken, // Google OAuth access token
-      userTimezone = 'UTC' // Optional: user's timezone
     } = await request.json();
 
     // Validate required fields

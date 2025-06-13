@@ -12,6 +12,7 @@ import { formatEther, parseEther } from "viem";
 import { useCallback, useState, useEffect } from "react";
 import { userHasWallet } from "@civic/auth-web3";
 import EventsPage from "./EventsPage"; // Import the EventsPage component
+import Image from "next/image";
 
 // Add type declaration for Google OAuth
 declare global {
@@ -248,9 +249,11 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
       {/* NFT Image Display */}
       <div className="flex justify-center mb-4">
         <div className="bg-white p-4 rounded-lg shadow-lg">
-          <img 
+          <Image 
             src={ticketSVG} 
             alt={`${eventTitle} Attendance Ticket`}
+            width={400}
+            height={250}
             className="w-full max-w-md h-auto rounded-lg"
           />
         </div>
@@ -364,7 +367,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const [mintedNFTs, setMintedNFTs] = useState<Array<{eventTitle: string; txHash: string; userAddress: string}>>([]);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [isCalendarEventCreated, setIsCalendarEventCreated] = useState(false);
   const [isCreatingCalendarEvent, setIsCreatingCalendarEvent] = useState(false);
   const [calendarEventLink, setCalendarEventLink] = useState<string | null>(null);
   
@@ -639,8 +641,8 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <div className="text-center text-gray-900 dark:text-white">
           <h3 className="text-lg font-semibold mb-2">🎫 Event Ticket Minting</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Please connect your wallet to mint event attendance NFTs
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Please sign in using the button above to access your embedded wallet and mint event attendance NFTs.
           </p>
         </div>
       </div>
