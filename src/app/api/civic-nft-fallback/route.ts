@@ -325,7 +325,7 @@ export async function POST(request: NextRequest) {
     `;
 
     // Send email using Resend
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: [to],
       subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`,

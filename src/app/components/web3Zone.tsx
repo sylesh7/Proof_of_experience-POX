@@ -10,8 +10,6 @@ import {
 } from "wagmi";
 import { formatEther, parseEther } from "viem";
 import { useCallback, useState, useEffect } from "react";
-import { userHasWallet } from "@civic/auth-web3";
-import EventsPage from "./EventsPage"; // Import the EventsPage component
 import Image from "next/image";
 
 // Add type declaration for Google OAuth
@@ -367,8 +365,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const [mintedNFTs, setMintedNFTs] = useState<Array<{eventTitle: string; txHash: string; userAddress: string}>>([]);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [isCreatingCalendarEvent, setIsCreatingCalendarEvent] = useState(false);
-  const [calendarEventLink, setCalendarEventLink] = useState<string | null>(null);
   
   const { writeContract, error: mintError, data: hash } = useWriteContract();
   
@@ -460,7 +456,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
       const data = await response.json();
       if (data.success) {
         setIsEmailSent(true);
-        // Reset the success message after 5 seconds
         setTimeout(() => {
           setIsEmailSent(false);
         }, 5000);
@@ -474,7 +469,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
     }
   };
 
-  // Modify the renderTestButton function
   const renderGetTicketsButton = () => {
     if (isConfirmed && mintTxHash) {
       return (
@@ -496,108 +490,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
             '🎫 Get My Tickets'
           )}
         </button>
-      );
-    }
-    return null;
-  };
-
-  // Add this test function
-  const testEmail = async () => {
-    if (!user?.email) {
-      console.error('No user email available');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/civic-nft-fallback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: user.email,
-          eventTitle: 'Test Event',
-          txHash: '0x123...', // Test transaction hash
-          contractAddress: EVENT_TICKET_CONTRACT,
-          userAddress: address || '0x123...',
-          openseaLink: `https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`,
-          etherscanLink: `${SEPOLIA_CONFIG.blockExplorer}/tx/0x123...`
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        console.log('Test email sent successfully');
-      } else {
-        console.error('Failed to send test email:', data.error);
-      }
-    } catch (error) {
-      console.error('Error sending test email:', error);
-    }
-  };
-
-  // Add test calendar function
-  const testCalendar = async () => {
-    try {
-      const client = window.google.accounts.oauth2.initTokenClient({
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-        scope: 'https://www.googleapis.com/auth/calendar.events',
-        callback: async (response) => {
-          if (response.access_token) {
-            try {
-              const calendarResponse = await fetch('/api/google-calendar', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  eventTitle: 'Test Event',
-                  eventDate: new Date().toISOString(),
-                  userEmail: user?.email || 'test@example.com',
-                  txHash: '0x123...',
-                  contractAddress: EVENT_TICKET_CONTRACT,
-                  accessToken: response.access_token
-                }),
-              });
-
-              const data = await calendarResponse.json();
-              if (data.success) {
-                console.log('Test calendar event created successfully');
-                setCalendarEventLink(data.eventLink);
-              } else {
-                console.error('Failed to create test calendar event:', data.error);
-              }
-            } catch (error) {
-              console.error('Error creating test calendar event:', error);
-            }
-          }
-        },
-      });
-
-      client.requestAccessToken();
-    } catch (error) {
-      console.error('Google OAuth test failed:', error);
-    }
-  };
-
-  // Modify the renderTestButton function to include both test buttons
-  const renderTestButton = () => {
-    if (process.env.NODE_ENV === 'development') {
-      return (
-        <div className="space-y-2">
-          <button
-            onClick={testEmail}
-            className="w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
-          >
-            🧪 Test Email
-          </button>
-          <button
-            onClick={testCalendar}
-            className="w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
-          >
-            📅 Test Calendar
-          </button>
-        </div>
       );
     }
     return null;
