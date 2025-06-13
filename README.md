@@ -1,4 +1,8 @@
 # civic-auth web3 Wagmi example with NextJS frontend code
-1. Put your Civic Auth Client ID in an env var called CLIENT_ID
+1. Set up your .env.local file:
+    NEXT_PUBLIC_CLIENT_ID
+    RESEND_API_KEY
+    GOOGLE_CLIENT_ID
+    GOOGLE_CLIENT_SECRET
 2. `yarn && yarn dev`
 3. Log in with Civic, see your embedded wallet address and balance, and send ETH to another wallet
