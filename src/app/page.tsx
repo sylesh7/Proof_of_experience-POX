@@ -1,16 +1,13 @@
 import { AuthHeader } from "./components/AuthHeader";
 import EventsPage from "./components/EventsPage"; // Update the path as needed
+import Image from 'next/image'; // Import Image component
 
 const Page = async () => {
   return (
     <div className="z-10 flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="flex flex-col items-center justify-center gap-8 p-4">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Civic Auth Web3 NextJS</h1>
-        <AuthHeader />
-      </div>
 
       {/* Events Section */}
-      <div className="bg-white dark:bg-gray-900 px-4 py-8">
+      <div className="bg-white dark:bg-gray-900 px-2 py-2 mt-2">
         <EventsPage />
       </div>
 

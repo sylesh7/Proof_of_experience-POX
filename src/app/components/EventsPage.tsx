@@ -2,21 +2,29 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { UserButton } from '@civic/auth-web3/react';
 
+import { Web3Zone } from './web3Zone'; // Adjust if necessary
+
+// ✅ Navbar Component
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-white shadow-md py-4 flex justify-center">
-      <div className="flex items-center px-6 py-2 rounded-2xl shadow-lg">
-        <Image src="/ethglobal-logo.svg" alt="Civic-hack Logo" width={50} height={50} />
-        <span className="ml-4 text-2xl font-bold text-gray-800">PoxWallet</span>
+    <nav className="bg-gray-950 border-b border-gray-800 py-4 px-6 flex items-center justify-between shadow-md">
+      <div className="flex items-center gap-3 px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 transition-all duration-200">
+        <Image src="/ethglobal-logo.svg" alt="PoxWallet Logo" width={36} height={36} />
+        <span className="text-xl md:text-2xl font-semibold text-white">
+          PoxWallet
+        </span>
+      </div>
+
+      <div className="px-3 py-1.5 rounded-full border border-gray-700 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-md transition-all duration-150">
+        <UserButton />
       </div>
     </nav>
   );
 };
 
-// Import the Web3Zone component
-import { Web3Zone } from './web3Zone'; // Corrected import path
-
+// ✅ Events Page
 const EventsPage = () => {
   const [showMinter, setShowMinter] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<string>('');
@@ -106,14 +114,13 @@ const EventsPage = () => {
     setSelectedEvent('');
   };
 
-  // If user clicked register, show the NFT minter
+  // ✅ NFT Minter View
   if (showMinter) {
     return (
       <>
         <Navbar />
         <div className="container mx-auto p-8">
-          {/* Back button */}
-          <button 
+          <button
             onClick={handleBackToEvents}
             className="mb-6 flex items-center text-blue-600 hover:text-blue-800 transition-colors"
           >
@@ -122,8 +129,7 @@ const EventsPage = () => {
             </svg>
             Back to Events
           </button>
-          
-          {/* Event registration header */}
+
           <div className="mb-8">
             <h1 className="text-5xl font-bold mb-4">Register for Event</h1>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -136,25 +142,22 @@ const EventsPage = () => {
             </div>
           </div>
 
-          {/* Web3Zone component with NFT Minter */}
           <Web3Zone prefilledEventTitle={selectedEvent} />
         </div>
       </>
     );
   }
 
-  // Default events listing view
+  // ✅ Events List View
   return (
     <>
       <Navbar />
       <div className="container mx-auto p-8">
-        <h1 className="text-5xl font-bold mb-8">Events</h1>
-        <div className="flex space-x-6 mb-8 text-xl">
-          <span className="font-bold border-b-2 border-blue-600 pb-1">Meetup</span>
-        </div>
-        <h2 className="text-3xl font-bold mb-6">
+        <h1 className="text-5xl font-bold mb-8 text-white">Explore the Events</h1>
+
+        <h2 className="text-3xl font-bold mb-6 text-white">
           Upcoming{" "}
-          <span className="bg-gray-800 text-white rounded-full px-3 py-1 text-base">
+          <span className="bg-gray-800 text-white rounded-full px-4 py-2 text-base">
             {events.length}
           </span>
         </h2>
@@ -185,11 +188,11 @@ const EventsPage = () => {
                   <p>{event.daysAhead}</p>
                   <p>{event.temperature}</p>
                 </div>
-                <button 
+                <button
                   onClick={() => handleRegister(event.title)}
                   className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 w-full transition-colors"
                 >
-                  Register 
+                  Register
                 </button>
               </div>
             </div>
