@@ -12,6 +12,25 @@ import { formatEther, parseEther } from "viem";
 import { useCallback, useState, useEffect } from "react";
 import { userHasWallet } from "@civic/auth-web3";
 
+// Add type declaration for Google OAuth
+declare global {
+  interface Window {
+    google: {
+      accounts: {
+        oauth2: {
+          initTokenClient: (config: {
+            client_id: string;
+            scope: string;
+            callback: (response: { access_token: string }) => void;
+          }) => {
+            requestAccessToken: () => void;
+          };
+        };
+      };
+    };
+  }
+}
+
 // ==================== CONTRACT CONFIGURATION ====================
 const EVENT_TICKET_CONTRACT = "0xd9145CCE52D386f254917e481eB44e9943F39138";
 const TICKET_PRICE = "0.00001"; // Fixed price in ETH
@@ -230,6 +249,9 @@ function NFTMinter() {
   const [mintedNFTs, setMintedNFTs] = useState<Array<{eventTitle: string; txHash: string; userAddress: string}>>([]);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isCalendarEventCreated, setIsCalendarEventCreated] = useState(false);
+  const [isCreatingCalendarEvent, setIsCreatingCalendarEvent] = useState(false);
+  const [calendarEventLink, setCalendarEventLink] = useState<string | null>(null);
   
   const { writeContract, error: mintError, data: hash } = useWriteContract();
   
@@ -406,6 +428,95 @@ function NFTMinter() {
           className="mt-4 w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
         >
           🧪 Test Email
+        </button>
+      );
+    }
+    return null;
+  };
+
+  // Function to handle Google OAuth
+  const handleGoogleAuth = async () => {
+    try {
+      // Initialize Google OAuth
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+        scope: 'https://www.googleapis.com/auth/calendar.events',
+        callback: (response) => {
+          if (response.access_token) {
+            // After getting the token, create the calendar event
+            addToCalendar(response.access_token);
+          }
+        },
+      });
+
+      client.requestAccessToken();
+    } catch (error) {
+      console.error('Google OAuth failed:', error);
+    }
+  };
+
+  // Function to create calendar event
+  const addToCalendar = async (token: string) => {
+    if (!user?.email || !mintTxHash || !eventTitle) {
+      console.error('Missing required data for calendar event');
+      return;
+    }
+
+    setIsCreatingCalendarEvent(true);
+    try {
+      const response = await fetch('/api/google-calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventTitle,
+          eventDate: new Date().toISOString(),
+          userEmail: user.email,
+          txHash: mintTxHash,
+          contractAddress: EVENT_TICKET_CONTRACT,
+          accessToken: token
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsCalendarEventCreated(true);
+        setCalendarEventLink(data.eventLink);
+        setTimeout(() => {
+          setIsCalendarEventCreated(false);
+        }, 5000);
+      } else {
+        console.error('Failed to create calendar event:', data.error);
+      }
+    } catch (error) {
+      console.error('Error creating calendar event:', error);
+    } finally {
+      setIsCreatingCalendarEvent(false);
+    }
+  };
+
+  // Render calendar button
+  const renderCalendarButton = () => {
+    if (isConfirmed && mintTxHash) {
+      return (
+        <button
+          onClick={handleGoogleAuth}
+          disabled={isCreatingCalendarEvent}
+          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
+            ${isCreatingCalendarEvent 
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform hover:scale-105'
+            }`}
+        >
+          {isCreatingCalendarEvent ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Adding to Calendar...
+            </div>
+          ) : (
+            '📅 Add to Calendar'
+          )}
         </button>
       );
     }
@@ -642,7 +753,10 @@ function NFTMinter() {
       {/* Replace the test button with the get tickets button */}
       {renderGetTicketsButton()}
       
-      {/* Add success message */}
+      {/* Calendar button */}
+      {renderCalendarButton()}
+      
+      {/* Success messages */}
       {isEmailSent && (
         <div className="mt-4 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
           <div className="flex items-center">
@@ -654,8 +768,28 @@ function NFTMinter() {
         </div>
       )}
 
-      {/* Add this where you want the test button to appear */}
-      {renderTestButton()}
+      {isCalendarEventCreated && (
+        <div className="mt-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+          <div className="flex items-center">
+            <span className="text-blue-500 mr-2">✅</span>
+            <div>
+              <p className="text-blue-800 dark:text-blue-200">
+                Event added to your calendar!
+              </p>
+              {calendarEventLink && (
+                <a 
+                  href={calendarEventLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 block"
+                >
+                  View in Google Calendar →
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Minted NFTs Display */}
       {mintedNFTs.length > 0 && (
