@@ -810,7 +810,7 @@ function WalletInfo() {
 
 // ==================== MAIN WEB3 COMPONENT ====================
 function Web3Dashboard({ walletCreationInProgress, prefilledEventTitle }: { walletCreationInProgress?: boolean; prefilledEventTitle?: string; }) {
-  const { isConnected, address, chain } = useAccount();
+  const { isConnected, chain } = useAccount();
   const chainId = useChainId();
   const user = useUser();
   const isLoading = user.isLoading || walletCreationInProgress;
@@ -861,7 +861,7 @@ function Web3Zone({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
             Please sign in using the button above to access your embedded wallet and mint event attendance NFTs.
           </p>
           <div className="text-xs text-gray-500 dark:text-gray-500 space-y-1">
-            <div>✨ Once signed in, you'll be able to:</div>
+            <div>✨ Once signed in, you&apos;ll be able to:</div>
             <div>• Mint NFT tickets for event attendance (only {TICKET_PRICE} ETH)</div>
             <div>• View your minted NFTs directly in the app</div>
             <div>• Prove your participation on the blockchain</div>
