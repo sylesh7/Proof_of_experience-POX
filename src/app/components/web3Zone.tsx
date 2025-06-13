@@ -166,8 +166,78 @@ const generateNFTMetadata = (eventTitle: string, userAddress: string): string =>
 
 // ==================== NFT DISPLAY COMPONENT ====================
 function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; userAddress: string; txHash: string }) {
+  const { user } = useUser();
+  const [isCreatingCalendarEvent, setIsCreatingCalendarEvent] = useState(false);
+  const [isCalendarEventCreated, setIsCalendarEventCreated] = useState(false);
+  const [calendarEventLink, setCalendarEventLink] = useState<string | null>(null);
   const ticketSVG = generateTicketSVG(eventTitle, userAddress);
-  
+
+  // Function to handle Google OAuth
+  const handleGoogleAuth = async () => {
+    try {
+      console.log('Client ID:', process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+      if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+        console.error('Google Client ID is not configured');
+        return;
+      }
+
+      const client = window.google.accounts.oauth2.initTokenClient({
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        scope: 'https://www.googleapis.com/auth/calendar.events',
+        callback: (response) => {
+          if (response.access_token) {
+            addToCalendar(response.access_token);
+          }
+        },
+      });
+
+      client.requestAccessToken();
+    } catch (error) {
+      console.error('Google OAuth failed:', error);
+    }
+  };
+
+  // Function to create calendar event
+  const addToCalendar = async (token: string) => {
+    if (!user?.email) {
+      console.error('No user email available');
+      return;
+    }
+
+    setIsCreatingCalendarEvent(true);
+    try {
+      const response = await fetch('/api/google-calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventTitle,
+          eventDate: new Date().toISOString(),
+          userEmail: user.email,
+          txHash,
+          contractAddress: EVENT_TICKET_CONTRACT,
+          accessToken: token
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsCalendarEventCreated(true);
+        setCalendarEventLink(data.eventLink);
+        setTimeout(() => {
+          setIsCalendarEventCreated(false);
+        }, 5000);
+      } else {
+        console.error('Failed to create calendar event:', data.error);
+      }
+    } catch (error) {
+      console.error('Error creating calendar event:', error);
+    } finally {
+      setIsCreatingCalendarEvent(false);
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900 dark:to-purple-900 p-6 rounded-lg border-2 border-blue-200 dark:border-blue-700">
       <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 text-center">
@@ -205,8 +275,52 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
             <p className="text-gray-900 dark:text-white">{new Date().toLocaleDateString()}</p>
           </div>
         </div>
+
+        {/* Add to Calendar Button */}
+        <button
+          onClick={handleGoogleAuth}
+          disabled={isCreatingCalendarEvent}
+          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
+            ${isCreatingCalendarEvent 
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform hover:scale-105'
+            }`}
+        >
+          {isCreatingCalendarEvent ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Adding to Calendar...
+            </div>
+          ) : (
+            '📅 Add to Calendar'
+          )}
+        </button>
+
+        {/* Calendar Event Success Message */}
+        {isCalendarEventCreated && (
+          <div className="mt-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+            <div className="flex items-center">
+              <span className="text-blue-500 mr-2">✅</span>
+              <div>
+                <p className="text-blue-800 dark:text-blue-200">
+                  Event added to your calendar!
+                </p>
+                {calendarEventLink && (
+                  <a 
+                    href={calendarEventLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 block"
+                  >
+                    View in Google Calendar →
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      
+
       {/* Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <a
@@ -419,105 +533,68 @@ function NFTMinter() {
     }
   };
 
-  // Add this button to your JSX, perhaps near the mint button
-  const renderTestButton = () => {
-    if (process.env.NODE_ENV === 'development') {
-      return (
-        <button
-          onClick={testEmail}
-          className="mt-4 w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
-        >
-          🧪 Test Email
-        </button>
-      );
-    }
-    return null;
-  };
-
-  // Function to handle Google OAuth
-  const handleGoogleAuth = async () => {
+  // Add test calendar function
+  const testCalendar = async () => {
     try {
-      // Initialize Google OAuth
       const client = window.google.accounts.oauth2.initTokenClient({
         client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
         scope: 'https://www.googleapis.com/auth/calendar.events',
-        callback: (response) => {
+        callback: async (response) => {
           if (response.access_token) {
-            // After getting the token, create the calendar event
-            addToCalendar(response.access_token);
+            try {
+              const calendarResponse = await fetch('/api/google-calendar', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  eventTitle: 'Test Event',
+                  eventDate: new Date().toISOString(),
+                  userEmail: user?.email || 'test@example.com',
+                  txHash: '0x123...',
+                  contractAddress: EVENT_TICKET_CONTRACT,
+                  accessToken: response.access_token
+                }),
+              });
+
+              const data = await calendarResponse.json();
+              if (data.success) {
+                console.log('Test calendar event created successfully');
+                setCalendarEventLink(data.eventLink);
+              } else {
+                console.error('Failed to create test calendar event:', data.error);
+              }
+            } catch (error) {
+              console.error('Error creating test calendar event:', error);
+            }
           }
         },
       });
 
       client.requestAccessToken();
     } catch (error) {
-      console.error('Google OAuth failed:', error);
+      console.error('Google OAuth test failed:', error);
     }
   };
 
-  // Function to create calendar event
-  const addToCalendar = async (token: string) => {
-    if (!user?.email || !mintTxHash || !eventTitle) {
-      console.error('Missing required data for calendar event');
-      return;
-    }
-
-    setIsCreatingCalendarEvent(true);
-    try {
-      const response = await fetch('/api/google-calendar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventTitle,
-          eventDate: new Date().toISOString(),
-          userEmail: user.email,
-          txHash: mintTxHash,
-          contractAddress: EVENT_TICKET_CONTRACT,
-          accessToken: token
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setIsCalendarEventCreated(true);
-        setCalendarEventLink(data.eventLink);
-        setTimeout(() => {
-          setIsCalendarEventCreated(false);
-        }, 5000);
-      } else {
-        console.error('Failed to create calendar event:', data.error);
-      }
-    } catch (error) {
-      console.error('Error creating calendar event:', error);
-    } finally {
-      setIsCreatingCalendarEvent(false);
-    }
-  };
-
-  // Render calendar button
-  const renderCalendarButton = () => {
-    if (isConfirmed && mintTxHash) {
+  // Modify the renderTestButton function to include both test buttons
+  const renderTestButton = () => {
+    if (process.env.NODE_ENV === 'development') {
       return (
-        <button
-          onClick={handleGoogleAuth}
-          disabled={isCreatingCalendarEvent}
-          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
-            ${isCreatingCalendarEvent 
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform hover:scale-105'
-            }`}
-        >
-          {isCreatingCalendarEvent ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              Adding to Calendar...
-            </div>
-          ) : (
-            '📅 Add to Calendar'
-          )}
-        </button>
+        <div className="space-y-2">
+          <button
+            onClick={testEmail}
+            className="w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
+          >
+            🧪 Test Email
+          </button>
+          <button
+            onClick={testCalendar}
+            className="w-full px-6 py-3 rounded-lg font-medium text-white bg-gray-600 hover:bg-gray-700 transition-all duration-200"
+          >
+            📅 Test Calendar
+          </button>
+        </div>
       );
     }
     return null;
@@ -753,9 +830,6 @@ function NFTMinter() {
       {/* Replace the test button with the get tickets button */}
       {renderGetTicketsButton()}
       
-      {/* Calendar button */}
-      {renderCalendarButton()}
-      
       {/* Success messages */}
       {isEmailSent && (
         <div className="mt-4 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
@@ -764,29 +838,6 @@ function NFTMinter() {
             <p className="text-green-800 dark:text-green-200">
               Ticket sent to your email successfully!
             </p>
-          </div>
-        </div>
-      )}
-
-      {isCalendarEventCreated && (
-        <div className="mt-4 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
-          <div className="flex items-center">
-            <span className="text-blue-500 mr-2">✅</span>
-            <div>
-              <p className="text-blue-800 dark:text-blue-200">
-                Event added to your calendar!
-              </p>
-              {calendarEventLink && (
-                <a 
-                  href={calendarEventLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-1 block"
-                >
-                  View in Google Calendar →
-                </a>
-              )}
-            </div>
           </div>
         </div>
       )}
