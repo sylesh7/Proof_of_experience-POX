@@ -33,7 +33,7 @@ const EventsPage = () => {
       type: "Co-Working",
       temperature: "22°C",
       daysAhead: "Rating days ahead",
-      image: "https://images.unsplash.com/photo-1524179091875-b494986c6a90?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2070&q=80"
     },
     {
       id: 2,
@@ -45,7 +45,7 @@ const EventsPage = () => {
       type: "Summit",
       temperature: "28°C",
       daysAhead: "43 days ahead",
-      image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=2070&q=80"
     },
     {
       id: 3,
@@ -57,7 +57,7 @@ const EventsPage = () => {
       type: "Hackathon",
       temperature: "24°C",
       daysAhead: "50 days ahead",
-      image: "https://images.unsplash.com/photo-1547658718-f2b7b25e792c?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2070&q=80"
     },
     {
       id: 4,
@@ -69,7 +69,7 @@ const EventsPage = () => {
       type: "Meetup",
       temperature: "20°C",
       daysAhead: "95 days ahead",
-      image: "https://images.unsplash.com/photo-1505373877845-8f2a2ceb520b?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=2070&q=80"
     },
     {
       id: 5,
@@ -81,7 +81,7 @@ const EventsPage = () => {
       type: "Competition",
       temperature: "26°C",
       daysAhead: "115 days ahead",
-      image: "https://images.unsplash.com/photo-1522204523234-8729aa6e9d52?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=2070&q=80"
     },
     {
       id: 6,
@@ -93,7 +93,7 @@ const EventsPage = () => {
       type: "Workshop",
       temperature: "-",
       daysAhead: "151 days ahead",
-      image: "https://images.unsplash.com/photo-1523580494863-6f3033ce52b5?auto=format&fit=crop&w=2070&q=80"
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2070&q=80"
     }
   ];
 
