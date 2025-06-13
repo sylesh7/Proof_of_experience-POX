@@ -1,21 +1,121 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
 
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Helper function to create Google Calendar event
+async function createCalendarEvent(
+  eventTitle: string,
+  eventDate: string,
+  userEmail: string,
+  txHash: string,
+  contractAddress: string,
+  accessToken: string
+) {
+  try {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      throw new Error('Google Client ID not configured');
+    }
+
+    const oauth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    oauth2Client.setCredentials({ access_token: accessToken });
+
+    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+
+    // Create event for the specified date or default to now + 1 hour
+    const startDate = eventDate ? new Date(eventDate) : new Date();
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // +2 hours
+
+    const event = {
+      summary: `${eventTitle} - NFT Attendance Verified`,
+      description: `🎫 Your attendance NFT has been minted!\n\n` +
+                  `Event: ${eventTitle}\n` +
+                  `Status: Attendance Verified on Blockchain\n\n` +
+                  `📝 Transaction Details:\n` +
+                  `TxHash: ${txHash}\n` +
+                  `Contract: ${contractAddress}\n\n` +
+                  `🎉 Congratulations! Your proof of attendance is now permanently recorded on the Ethereum blockchain.`,
+      start: {
+        dateTime: startDate.toISOString(),
+        timeZone: 'UTC',
+      },
+      end: {
+        dateTime: endDate.toISOString(),
+        timeZone: 'UTC',
+      },
+      attendees: [{ email: userEmail }],
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: 'email', minutes: 24 * 60 },   // 1 day before
+          { method: 'popup', minutes: 30 }         // 30 mins before
+        ],
+      },
+      colorId: '2', // Green color for success
+    };
+
+    const response = await calendar.events.insert({
+      calendarId: 'primary',
+      requestBody: event,
+    });
+
+    return {
+      success: true,
+      eventId: response.data.id,
+      eventLink: response.data.htmlLink,
+      message: 'Calendar event created successfully'
+    };
+  } catch (error) {
+    console.error('Calendar event creation failed:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create calendar event'
+    };
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { 
       to, 
       eventTitle, 
+      eventDate, // Optional: specific date for the event
       txHash, 
       contractAddress, 
       userAddress, 
       openseaLink, 
-      etherscanLink 
+      etherscanLink,
+      accessToken, // Google OAuth access token
+      userTimezone = 'UTC' // Optional: user's timezone
     } = await request.json();
 
+    // Validate required fields
+    if (!to || !eventTitle || !txHash) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields: to, eventTitle, or txHash' },
+        { status: 400 }
+      );
+    }
+
+    // Create calendar event if accessToken is provided
+    let calendarResult = null;
+    if (accessToken) {
+      console.log('Creating calendar event...');
+      calendarResult = await createCalendarEvent(
+        eventTitle,
+        eventDate,
+        to,
+        txHash,
+        contractAddress,
+        accessToken
+      );
+      console.log('Calendar result:', calendarResult);
+    }
+
+    // Enhanced email HTML with calendar integration
     const emailHtml = `
       <!DOCTYPE html>
       <html>
@@ -48,7 +148,7 @@ export async function POST(request: NextRequest) {
               ${eventTitle}
             </h2>
             <p style="color: #64748b; margin: 8px 0 0 0; font-size: 14px;">
-              Your attendance is now verified on blockchain
+              Your attendance is now verified on blockchain${calendarResult?.success ? ' and added to your calendar' : ''}
             </p>
           </div>
 
@@ -67,6 +167,42 @@ export async function POST(request: NextRequest) {
                 </div>
               </div>
             </div>
+
+            ${calendarResult?.success ? `
+            <!-- Calendar Event Success -->
+            <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #93c5fd; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+              <div style="display: flex; align-items: center;">
+                <span style="font-size: 24px; margin-right: 12px;">📅</span>
+                <div style="flex: 1;">
+                  <h3 style="color: #1e3a8a; margin: 0; font-size: 18px; font-weight: 600;">
+                    Added to Google Calendar
+                  </h3>
+                  <p style="color: #1d4ed8; margin: 4px 0 8px 0; font-size: 14px;">
+                    Event reminder created with notification settings
+                  </p>
+                  <a href="${calendarResult.eventLink}" 
+                     style="display: inline-block; background: #2563eb; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: 500;">
+                    📅 Open in Google Calendar
+                  </a>
+                </div>
+              </div>
+            </div>
+            ` : accessToken ? `
+            <!-- Calendar Event Failed -->
+            <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 1px solid #fca5a5; border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+              <div style="display: flex; align-items: center;">
+                <span style="font-size: 24px; margin-right: 12px;">⚠️</span>
+                <div>
+                  <h3 style="color: #991b1b; margin: 0; font-size: 18px; font-weight: 600;">
+                    Calendar Event Creation Failed
+                  </h3>
+                  <p style="color: #dc2626; margin: 4px 0 0 0; font-size: 14px;">
+                    ${calendarResult?.error || 'Unable to create calendar event'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            ` : ''}
 
             <!-- NFT Details Card -->
             <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; margin-bottom: 30px;">
@@ -87,17 +223,36 @@ export async function POST(request: NextRequest) {
                   </tr>
                   <tr>
                     <td style="padding: 10px 0; color: #64748b; font-size: 14px; font-weight: 500;">
-                      Date:
+                      Minted:
                     </td>
                     <td style="padding: 10px 0; color: #1e293b; font-size: 14px;">
                       ${new Date().toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
                         month: 'long', 
-                        day: 'numeric' 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
                       })}
                     </td>
                   </tr>
+                  ${eventDate ? `
+                  <tr>
+                    <td style="padding: 10px 0; color: #64748b; font-size: 14px; font-weight: 500;">
+                      Event Date:
+                    </td>
+                    <td style="padding: 10px 0; color: #1e293b; font-size: 14px;">
+                      ${new Date(eventDate).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </td>
+                  </tr>
+                  ` : ''}
                   <tr>
                     <td style="padding: 10px 0; color: #64748b; font-size: 14px; font-weight: 500;">
                       Wallet:
@@ -128,6 +283,12 @@ export async function POST(request: NextRequest) {
                  style="display: inline-block; background: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; margin: 8px; font-weight: 600; font-size: 14px; transition: background 0.2s;">
                  🌊 View on OpenSea
               </a>
+              ${calendarResult?.success && calendarResult.eventLink ? `
+              <a href="${calendarResult.eventLink}"
+                 style="display: inline-block; background: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; margin: 8px; font-weight: 600; font-size: 14px; transition: background 0.2s;">
+                 📅 View Calendar Event
+              </a>
+              ` : ''}
             </div>
 
             <!-- Transaction Hash -->
@@ -164,9 +325,9 @@ export async function POST(request: NextRequest) {
       </html>
     `;
 
-    // Send email using Resend with test domain
+    // Send email using Resend
     const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Using Resend's test domain
+      from: 'onboarding@resend.dev',
       to: [to],
       subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`,
       html: emailHtml,
@@ -180,17 +341,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Return comprehensive response
     return NextResponse.json({ 
       success: true, 
       message: 'NFT email sent successfully',
       recipient: to,
-      subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`
+      subject: `Your "${eventTitle}" Attendance NFT is Ready! 🎫`,
+      calendar: calendarResult ? {
+        success: calendarResult.success,
+        eventId: calendarResult.eventId,
+        eventLink: calendarResult.eventLink,
+        error: calendarResult.error
+      } : {
+        success: false,
+        message: 'No access token provided - calendar event not created'
+      }
     });
 
   } catch (error) {
-    console.error('Email sending failed:', error);
+    console.error('Email/Calendar process failed:', error);
     return NextResponse.json(
-      { success: false, error: 'Email system failed' },
+      { success: false, error: 'Process failed', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

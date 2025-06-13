@@ -13,7 +13,7 @@ const AuthHeader = () => {
           </div>
         ) : (
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            Click to sign in with Civic Auth
+            Sign in With Civic to Launch APP
           </div>
         )}
       </div>

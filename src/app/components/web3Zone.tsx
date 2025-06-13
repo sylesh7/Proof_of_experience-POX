@@ -11,6 +11,7 @@ import {
 import { formatEther, parseEther } from "viem";
 import { useCallback, useState, useEffect } from "react";
 import { userHasWallet } from "@civic/auth-web3";
+import EventsPage from "./EventsPage"; // Import the EventsPage component
 
 // Add type declaration for Google OAuth
 declare global {
@@ -353,12 +354,12 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
 }
 
 // ==================== NFT MINTING COMPONENT ====================
-function NFTMinter() {
+function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const { isConnected, address, chain } = useAccount();
   const { user } = useUser();
   const [isMinting, setIsMinting] = useState(false);
   const [mintTxHash, setMintTxHash] = useState<string | null>(null);
-  const [eventTitle, setEventTitle] = useState("");
+  const [eventTitle, setEventTitle] = useState(prefilledEventTitle || "");
   const [mintingMethod, setMintingMethod] = useState<"safeMint" | "claim">("safeMint");
   const [mintedNFTs, setMintedNFTs] = useState<Array<{eventTitle: string; txHash: string; userAddress: string}>>([]);
   const [isEmailSent, setIsEmailSent] = useState(false);
@@ -914,7 +915,7 @@ function WalletInfo() {
 }
 
 // ==================== MAIN WEB3 COMPONENT ====================
-function Web3Dashboard({ walletCreationInProgress }: { walletCreationInProgress?: boolean }) {
+function Web3Dashboard({ walletCreationInProgress, prefilledEventTitle }: { walletCreationInProgress?: boolean; prefilledEventTitle?: string; }) {
   const { isConnected, address, chain } = useAccount();
   const chainId = useChainId();
   const user = useUser();
@@ -947,13 +948,13 @@ function Web3Dashboard({ walletCreationInProgress }: { walletCreationInProgress?
   return (
     <div className="space-y-6">
       <WalletInfo />
-      <NFTMinter />
+      <NFTMinter prefilledEventTitle={prefilledEventTitle} />
     </div>
   );
 }
 
 // ==================== MAIN EXPORT COMPONENT ====================
-function Web3Zone() {
+function Web3Zone({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const { user, isLoading, walletCreationInProgress } = useUser();
   useAutoConnect();
 
@@ -978,7 +979,8 @@ function Web3Zone() {
     );
   }
 
-  return <Web3Dashboard walletCreationInProgress={walletCreationInProgress} />;
+  // Render EventsPage when user is signed in
+  return <Web3Dashboard prefilledEventTitle={prefilledEventTitle} walletCreationInProgress={walletCreationInProgress} />;
 }
 
 export { Web3Zone };

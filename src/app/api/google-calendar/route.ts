@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { calendar_v3, google } from 'googleapis';
+import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
 export async function POST(request: NextRequest) {
@@ -13,54 +13,47 @@ export async function POST(request: NextRequest) {
       accessToken
     } = await request.json();
 
-    // Initialize OAuth2 client with just the client ID
-    const oauth2Client = new OAuth2Client(
-      process.env.GOOGLE_CLIENT_ID
-    );
+    if (!accessToken || !userEmail) {
+      return NextResponse.json({ success: false, error: 'Missing accessToken or userEmail' }, { status: 400 });
+    }
 
-    // Set the access token
-    oauth2Client.setCredentials({
-      access_token: accessToken
-    });
+    // Initialize OAuth2Client
+    const oauth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    oauth2Client.setCredentials({ access_token: accessToken });
 
-    // Initialize Google Calendar API with OAuth client
-    const calendar = google.calendar({
-      version: 'v3',
-      auth: oauth2Client
-    });
+    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
-    // Create calendar event
-    const event: calendar_v3.Schema$Event = {
-      summary: `${eventTitle} - NFT Event`,
-      description: `NFT Transaction Hash: ${txHash}\nContract Address: ${contractAddress}`,
+    // Define the calendar event
+    const event = {
+      summary: `${eventTitle} - NFT Attendance`,
+      description: `Your proof of attendance NFT was minted.\n\nTxHash: ${txHash}\nContract: ${contractAddress}`,
       start: {
         dateTime: eventDate,
         timeZone: 'UTC',
       },
       end: {
-        dateTime: new Date(new Date(eventDate).getTime() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours duration
+        dateTime: new Date(new Date(eventDate).getTime() + 2 * 60 * 60 * 1000).toISOString(), // +2 hours
         timeZone: 'UTC',
       },
-      attendees: [
-        { email: userEmail }
-      ],
+      attendees: [{ email: userEmail }],
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'email', minutes: 24 * 60 }, // 1 day before
-          { method: 'popup', minutes: 30 }, // 30 minutes before
+          { method: 'email', minutes: 24 * 60 },   // 1 day before
+          { method: 'popup', minutes: 30 }         // 30 mins before
         ],
       },
     };
 
+    // Insert event into user's primary calendar
     const response = await calendar.events.insert({
       calendarId: 'primary',
       requestBody: event,
     });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Calendar event created successfully',
+    return NextResponse.json({
+      success: true,
+      message: 'Google Calendar event created',
       eventLink: response.data.htmlLink
     });
 
@@ -71,4 +64,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}
