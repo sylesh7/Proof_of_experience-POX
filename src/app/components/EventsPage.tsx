@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { UserButton } from '@civic/auth-web3/react';
-
-import { Web3Zone } from './web3Zone'; // Adjust if necessary
+import StyledButton from './StyledButton';
+import StyledEventCard from './StyledEventCard';
+import { Web3Zone } from './web3Zone';
 
 // ✅ Navbar Component
 const Navbar: React.FC = () => {
@@ -120,15 +121,17 @@ const EventsPage = () => {
       <>
         <Navbar />
         <div className="container mx-auto p-8">
-          <button
+          <StyledButton
             onClick={handleBackToEvents}
-            className="mb-6 flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+            className="mb-6"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Back to Events
-          </button>
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Events
+            </div>
+          </StyledButton>
 
           <div className="mb-8">
             <h1 className="text-5xl font-bold mb-4">Register for Event</h1>
@@ -164,38 +167,11 @@ const EventsPage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {events.map((event) => (
-            <div key={event.id} className="bg-gray-900 rounded-lg shadow-lg overflow-hidden flex flex-col justify-between">
-              <div className="relative w-full h-48">
-                <Image
-                  src={event.image}
-                  alt={event.title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white p-4">
-                  <p className="text-sm">{event.month}</p>
-                  <p className="text-4xl font-bold">{event.day}</p>
-                  <p className="text-sm">{event.weekday}</p>
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl text-white font-bold mb-2">{event.title}</h3>
-                <div className="flex items-center text-gray-400 text-sm mb-4">
-                  <span className="mr-4">📍 {event.location}</span>
-                  <span>&bull; {event.type}</span>
-                </div>
-                <div className="text-gray-400 text-sm mb-4">
-                  <p>{event.daysAhead}</p>
-                  <p>{event.temperature}</p>
-                </div>
-                <button
-                  onClick={() => handleRegister(event.title)}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 w-full transition-colors"
-                >
-                  Register
-                </button>
-              </div>
-            </div>
+            <StyledEventCard
+              key={event.id}
+              event={event}
+              onRegister={handleRegister}
+            />
           ))}
         </div>
       </div>

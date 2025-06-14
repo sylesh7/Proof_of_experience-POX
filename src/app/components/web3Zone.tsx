@@ -11,6 +11,7 @@ import {
 import { formatEther, parseEther } from "viem";
 import { useCallback, useState, useEffect } from "react";
 import Image from "next/image";
+import StyledButton from './StyledButton';
 
 // Add type declaration for Google OAuth
 declare global {
@@ -279,14 +280,9 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
         </div>
 
         {/* Add to Calendar Button */}
-        <button
+        <StyledButton
           onClick={handleGoogleAuth}
           disabled={isCreatingCalendarEvent}
-          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
-            ${isCreatingCalendarEvent 
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform hover:scale-105'
-            }`}
         >
           {isCreatingCalendarEvent ? (
             <div className="flex items-center justify-center">
@@ -296,7 +292,7 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
           ) : (
             '📅 Add to Calendar'
           )}
-        </button>
+        </StyledButton>
 
         {/* Calendar Event Success Message */}
         {isCalendarEventCreated && (
@@ -325,30 +321,21 @@ function NFTDisplay({ eventTitle, userAddress, txHash }: { eventTitle: string; u
 
       {/* Action Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <a
-          href={`${SEPOLIA_CONFIG.blockExplorer}/tx/${txHash}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center bg-blue-600 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+        <StyledButton
+          onClick={() => window.open(`${SEPOLIA_CONFIG.blockExplorer}/tx/${txHash}`, '_blank')}
         >
           🔍 View Transaction
-        </a>
-        <a
-          href={`${SEPOLIA_CONFIG.blockExplorer}/address/${userAddress}#tokentxnsErc721`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center bg-purple-600 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors"
+        </StyledButton>
+        <StyledButton
+          onClick={() => window.open(`https://testnets.opensea.io/${userAddress}`, '_blank')}
         >
           🎫 View My NFTs
-        </a>
-        <a
-          href={`https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center bg-cyan-600 text-white px-4 py-3 rounded-lg text-sm font-medium hover:bg-cyan-700 transition-colors"
+        </StyledButton>
+        <StyledButton
+          onClick={() => window.open(`https://testnets.opensea.io/assets/sepolia/${EVENT_TICKET_CONTRACT}`, '_blank')}
         >
           🌊 View on OpenSea
-        </a>
+        </StyledButton>
       </div>
     </div>
   );
@@ -472,14 +459,9 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const renderGetTicketsButton = () => {
     if (isConfirmed && mintTxHash) {
       return (
-        <button
+        <StyledButton
           onClick={getTickets}
           disabled={isSendingEmail}
-          className={`mt-4 w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
-            ${isSendingEmail 
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 hover:shadow-lg transform hover:scale-105'
-            }`}
         >
           {isSendingEmail ? (
             <div className="flex items-center justify-center">
@@ -489,7 +471,7 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
           ) : (
             '🎫 Get My Tickets'
           )}
-        </button>
+        </StyledButton>
       );
     }
     return null;
@@ -644,7 +626,7 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
           </div>
           
           {/* Mint Button */}
-          <button
+          <StyledButton
             onClick={mintEventTicket}
             disabled={
               !eventTitle.trim() || 
@@ -654,11 +636,6 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
               !isValidContract ||
               hasInsufficientBalance
             }
-            className={`w-full px-6 py-3 rounded-lg font-medium text-white transition-all duration-200
-              ${!eventTitle.trim() || isMinting || isConfirming || !isOnSepolia || !isValidContract || hasInsufficientBalance
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:shadow-lg transform hover:scale-105'
-              }`}
           >
             {isMinting || isConfirming ? (
               <div className="flex items-center justify-center">
@@ -668,7 +645,7 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
             ) : (
               `🎫 Mint Attendance Ticket (${TICKET_PRICE} ETH)`
             )}
-          </button>
+          </StyledButton>
 
           {/* Error Display */}
           {mintError && (
