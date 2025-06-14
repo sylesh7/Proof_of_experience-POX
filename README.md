@@ -1,12 +1,12 @@
 # Proof of Experience (PoX): Verifiable Event Credentials for the Web3 Era
 
-## 🌟 Overview
+##  Overview
 
 **PoX** is a decentralized application that turns every event you attend into a **verifiable on-chain credential** — no wallet, no friction. Powered by [Civic Auth](https://www.civic.com/), it bridges Web2 and Web3 by minting soulbound NFT tickets, syncing events to your Google Calendar, and sending proof directly to your Gmail.
 
 ---
 
-## 📌 Problem
+##  Problem
 
 - No verifiable credentials for attended events  
 - Reliance on screenshots, QR codes, or centralized emails  
@@ -16,7 +16,7 @@
 
 ---
 
-## ✅ Solution
+##  Solution
 
 PoX solves this by:
 - Enabling **Civic Auth login** (no seed phrases or MetaMask)
@@ -28,35 +28,35 @@ PoX solves this by:
 
 ---
 
-## 🧩 Features
+##  Features
 
-- **🔐 Civic Auth Integration**  
+- ** Civic Auth Integration**  
   Frictionless login without wallets or extensions.
   
-- **🎫 NFT Ticket Minting**  
+- ** NFT Ticket Minting**  
   Tamper-proof, soulbound NFT credentials on-chain.
 
-- **📅 Calendar Auto-Sync**  
+- ** Calendar Auto-Sync**  
   Automatically adds events to the user’s Google Calendar.
 
-- **📧 Gmail Proof Delivery**  
+- ** Gmail Proof Delivery**  
   Mints NFT → sends metadata and tx hash to Gmail instantly.
 
-- **🏅 On-Chain Experience Badges**  
+- ** On-Chain Experience Badges**  
   Web3-native resume for real and virtual participation.
 
-- **👜 No Wallet Required**  
+- ** No Wallet Required**  
   Embedded wallet experience for everyone — crypto-savvy or not.
 
 ---
 
-## 📊 Architecture Flow
+##  Architecture Flow
 
 ![PoX Flowchart](./public/pox-flowchart.png)
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend**: Next.js, TypeScript, Tailwind CSS  
 - **Auth & Wallets**: `@civic/auth-web3`  
@@ -67,7 +67,7 @@ PoX solves this by:
 
 ---
 
-## 🧪 Local Setup Instructions
+##  Local Setup Instructions
 
 ### 1. Clone the Repository
 
