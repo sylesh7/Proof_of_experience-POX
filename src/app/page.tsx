@@ -4,7 +4,7 @@ const Page = async () => {
   return (
     <div className="z-10 flex flex-col min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
       <div className="flex flex-col items-center justify-center gap-8 p-4">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Civic Auth Web3 NextJS</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white"></h1>
       </div>
 
       {/* Events Section */}
