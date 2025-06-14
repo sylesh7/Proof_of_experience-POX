@@ -211,6 +211,181 @@ const EventsPage = () => {
                   <p>NFT Benefits: Proof of Attendance, Access to Event Resources, Networking Opportunities</p>
                 </div>
               </div>
+
+              {/* Event Agenda Section */}
+              <div className="mt-8">
+                <h3 className="text-xl font-semibold text-white mb-4">Event Schedule</h3>
+                <div className="space-y-3">
+                  {selectedEventData?.title === "Cowork with ETHGlobal in Oxford with Oxford Blockchain Society" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Registration & Welcome - Check-in and networking with fellow participants</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:30 AM</div>
+                        <div className="text-gray-300">Project Introductions - Share your blockchain project ideas</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">11:00 AM</div>
+                        <div className="text-gray-300">Collaborative Work - Work on projects with other developers</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">12:30 PM</div>
+                        <div className="text-gray-300">Lunch Break - Network over lunch</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">1:30 PM</div>
+                        <div className="text-gray-300">Group Discussions - Share progress and challenges</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">3:00 PM</div>
+                        <div className="text-gray-300">Closing Remarks - Wrap up and next steps</div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventData?.title === "AI & Blockchain Summit 2024" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">9:00 AM</div>
+                        <div className="text-gray-300">Registration - Check-in and welcome materials</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Keynote Speeches - Industry leaders share insights</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">11:30 AM</div>
+                        <div className="text-gray-300">Panel Discussions - Expert panels on AI and blockchain integration</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">1:00 PM</div>
+                        <div className="text-gray-300">Lunch Break - Networking lunch with speakers</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">2:30 PM</div>
+                        <div className="text-gray-300">Workshops - Hands-on sessions with experts</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">4:00 PM</div>
+                        <div className="text-gray-300">Networking Session - Connect with industry professionals</div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventData?.title === "Global Hackathon for Sustainable Tech" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">9:00 AM</div>
+                        <div className="text-gray-300">Registration - Team check-in and setup</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Opening Ceremony - Welcome and challenge introduction</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">11:00 AM</div>
+                        <div className="text-gray-300">Team Formation - Find your perfect team members</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">12:00 PM</div>
+                        <div className="text-gray-300">Hacking Begins - Start building your solution</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">6:00 PM</div>
+                        <div className="text-gray-300">Dinner Break - Refuel and network</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">7:00 PM</div>
+                        <div className="text-gray-300">Mentorship Sessions - Get guidance from experts</div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventData?.title === "Local Developers Meetup: Web3 Focus" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">6:00 PM</div>
+                        <div className="text-gray-300">Networking - Meet fellow developers</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">6:30 PM</div>
+                        <div className="text-gray-300">Community Updates - Latest in Web3 development</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">7:00 PM</div>
+                        <div className="text-gray-300">Lightning Talks - Quick presentations on hot topics</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">7:45 PM</div>
+                        <div className="text-gray-300">Main Talks - In-depth technical discussions</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">8:30 PM</div>
+                        <div className="text-gray-300">Q&A Session - Ask questions to speakers</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">9:00 PM</div>
+                        <div className="text-gray-300">Networking - Continue discussions and connections</div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventData?.title === "Startup Pitch Competition: Fall 2024" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">9:00 AM</div>
+                        <div className="text-gray-300">Registration - Check-in and setup</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Opening Remarks - Welcome and competition overview</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:30 AM</div>
+                        <div className="text-gray-300">Startup Pitches - Present your innovative solutions</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">12:30 PM</div>
+                        <div className="text-gray-300">Lunch Break - Network with investors</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">2:00 PM</div>
+                        <div className="text-gray-300">Investor Panel - Get feedback from industry experts</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">4:00 PM</div>
+                        <div className="text-gray-300">Awards Ceremony - Winners announced</div>
+                      </div>
+                    </>
+                  )}
+                  {selectedEventData?.title === "Advanced React Workshop" && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Workshop Introduction - Overview and setup</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:30 AM</div>
+                        <div className="text-gray-300">Advanced Topics - Deep dive into React concepts</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">12:00 PM</div>
+                        <div className="text-gray-300">Lunch Break - Q&A with instructor</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">1:00 PM</div>
+                        <div className="text-gray-300">Hands-on Projects - Build real-world applications</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">3:00 PM</div>
+                        <div className="text-gray-300">Q&A Session - Get your questions answered</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">4:00 PM</div>
+                        <div className="text-gray-300">Closing Remarks - Next steps and resources</div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
