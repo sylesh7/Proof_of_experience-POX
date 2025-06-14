@@ -58,7 +58,7 @@ const StyledEventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
           </div>
           <p className="card__description">{event.description}</p>
           <StyledButton onClick={() => onRegister(event.title)}>
-            Register
+            View Details
           </StyledButton>
         </div>
       </div>

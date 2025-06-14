@@ -643,7 +643,7 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
                 {isMinting ? 'Submitting Transaction...' : 'Confirming on Blockchain...'}
               </div>
             ) : (
-              `🎫 Mint Attendance Ticket (${TICKET_PRICE} ETH)`
+              `Register`
             )}
           </StyledButton>
 
