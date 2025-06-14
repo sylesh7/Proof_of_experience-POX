@@ -11,7 +11,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-gray-950 border-b border-gray-800 py-4 px-6 flex items-center justify-between shadow-md">
       <div className="flex items-center gap-3 px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 transition-all duration-200">
-        <Image src="/ethglobal-logo.svg" alt="PoxWallet Logo" width={36} height={36} />
+        <Image src="/Pox Logo.jpg" alt="PoxWallet Logo" width={36} height={36} className="rounded-full" />
         <span className="text-xl md:text-2xl font-semibold text-white">
           PoxWallet
         </span>
