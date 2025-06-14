@@ -34,7 +34,7 @@ declare global {
 
 // ==================== CONTRACT CONFIGURATION ====================
 const EVENT_TICKET_CONTRACT = "0xd9145CCE52D386f254917e481eB44e9943F39138";
-const TICKET_PRICE = "0.00001"; // Fixed price in ETH
+export const TICKET_PRICE = "0.00001"; // Fixed price in ETH
 
 // Contract ABI for NFT minting
 const EVENT_TICKET_ABI = [
@@ -833,18 +833,10 @@ function Web3Zone({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
     return (
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         <div className="mb-4 text-gray-900 dark:text-white text-center">
-          <h3 className="text-xl font-semibold mb-2">🚀 Web3 Event Platform</h3>
+          <h3 className="text-xl font-semibold mb-2"> Web3 Event Platform</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Please sign in using the button above to access your embedded wallet and mint event attendance NFTs.
           </p>
-          <div className="text-xs text-gray-500 dark:text-gray-500 space-y-1">
-            <div>✨ Once signed in, you&apos;ll be able to:</div>
-            <div>• Mint NFT tickets for event attendance (only {TICKET_PRICE} ETH)</div>
-            <div>• View your minted NFTs directly in the app</div>
-            <div>• Prove your participation on the blockchain</div>
-            <div>• Generate beautiful SVG tickets with your details</div>
-            <div>• View your NFTs on OpenSea and Etherscan</div>
-          </div>
         </div>
       </div>
     );

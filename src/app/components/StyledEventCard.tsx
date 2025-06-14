@@ -15,6 +15,7 @@ interface EventCardProps {
     temperature: string;
     daysAhead: string;
     image: string;
+    description: string;
   };
   onRegister: (title: string) => void;
 }
@@ -55,6 +56,7 @@ const StyledEventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
               <p>{event.temperature}</p>
             </div>
           </div>
+          <p className="card__description">{event.description}</p>
           <StyledButton onClick={() => onRegister(event.title)}>
             Register
           </StyledButton>
@@ -137,7 +139,7 @@ const StyledWrapper = styled.div`
   }
 
   .card__details {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
 
   .card__detail {
@@ -151,6 +153,18 @@ const StyledWrapper = styled.div`
   .card__info {
     color: #666;
     font-size: 0.875rem;
+  }
+
+  .card__description {
+    color: #4a5568;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   @keyframes glitch {
