@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { UserButton } from '@civic/auth-web3/react';
 import StyledButton from './StyledButton';
@@ -29,6 +29,7 @@ const Navbar: React.FC = () => {
 const EventsPage = () => {
   const [showMinter, setShowMinter] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<string>('');
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   const events = [
     {
@@ -105,6 +106,30 @@ const EventsPage = () => {
     }
   ];
 
+  // Preload images
+  useEffect(() => {
+    const preloadImages = async () => {
+      const imagePromises = events.map((event) => {
+        return new Promise((resolve, reject) => {
+          const img = new window.Image();
+          img.src = event.image;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      try {
+        await Promise.all(imagePromises);
+        setImagesLoaded(true);
+      } catch (error) {
+        console.error('Error preloading images:', error);
+        setImagesLoaded(true);
+      }
+    };
+
+    preloadImages();
+  }, []);
+
   const handleRegister = (eventTitle: string) => {
     setSelectedEvent(eventTitle);
     setShowMinter(true);
@@ -165,7 +190,7 @@ const EventsPage = () => {
           </span>
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-300 ${imagesLoaded ? 'opacity-100' : 'opacity-0'}`}>
           {events.map((event) => (
             <StyledEventCard
               key={event.id}

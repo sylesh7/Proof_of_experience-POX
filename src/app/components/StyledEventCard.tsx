@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import StyledButton from './StyledButton';
@@ -20,15 +20,22 @@ interface EventCardProps {
 }
 
 const StyledEventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <StyledWrapper>
       <div className="card">
-        <div className="card__image">
+        <div className={`card__image ${imageLoaded ? 'loaded' : 'loading'}`}>
           <Image
             src={event.image}
             alt={event.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
+            priority={event.id <= 3}
+            loading={event.id <= 3 ? "eager" : "lazy"}
+            onLoad={() => setImageLoaded(true)}
+            quality={100}
           />
           <div className="card__date">
             <p className="text-sm">{event.month}</p>
@@ -76,6 +83,16 @@ const StyledWrapper = styled.div`
     position: relative;
     width: 100%;
     height: 200px;
+    background-color: #f3f4f6;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .card__image.loading {
+    opacity: 0;
+  }
+
+  .card__image.loaded {
+    opacity: 1;
   }
 
   .card__date {
@@ -85,6 +102,7 @@ const StyledWrapper = styled.div`
     background: rgba(0, 0, 0, 0.7);
     color: white;
     padding: 1rem;
+    z-index: 1;
   }
 
   .card__content {
