@@ -52,7 +52,7 @@ PoX solves this by:
 
 ## 📊 Architecture Flow
 
-![PoX Flowchart](./Pox%20Flow%20chart.png)
+![PoX Flowchart](./public/pox-flowchart.png)
 
 ---
 
