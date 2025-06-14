@@ -7,8 +7,7 @@ import StyledButton from './StyledButton';
 import StyledEventCard from './StyledEventCard';
 import { Web3Zone, TICKET_PRICE } from './web3Zone';
 
-// ✅ Navbar Component
-// ✅ Enhanced Navbar Component
+
 const Navbar: React.FC = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-2xl border-b border-gray-100">
@@ -37,10 +36,6 @@ const Navbar: React.FC = () => {
             <div className="relative group">
               <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
                 <UserButton />
-                <span className="font-medium text-gray-700">Account</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 group-hover:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
               </div>
             </div>
           </div>
@@ -50,7 +45,7 @@ const Navbar: React.FC = () => {
   );
 };
 
-// ✅ Events Page
+
 const EventsPage = () => {
   const [showMinter, setShowMinter] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<string>('');
@@ -137,7 +132,7 @@ const EventsPage = () => {
     }
   ];
 
-  // Preload images
+
   useEffect(() => {
     const preloadImages = async () => {
       const imagePromises = events.map((event) => {
@@ -171,7 +166,7 @@ const EventsPage = () => {
     setSelectedEvent('');
   };
 
-  // ✅ NFT Minter View
+
   if (showMinter) {
     const selectedEventData = events.find(event => event.title === selectedEvent);
     
@@ -237,7 +232,7 @@ const EventsPage = () => {
                 </div>
               </div>
 
-              {/* Event Agenda Section */}
+             
               <div className="mt-8">
                 <h3 className="text-xl font-semibold text-white mb-4">Event Schedule</h3>
                 <div className="space-y-3">
@@ -426,7 +421,7 @@ const EventsPage = () => {
     );
   }
 
-  // ✅ Events List View
+
   return (
     <>
       <Navbar />

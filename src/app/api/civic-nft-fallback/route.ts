@@ -3,10 +3,10 @@ import { Resend } from 'resend';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
-// Initialize Resend with your API key
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Helper function to create Google Calendar event
+
 async function createCalendarEvent(
   eventTitle: string,
   eventDate: string,
@@ -25,7 +25,7 @@ async function createCalendarEvent(
 
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
-    // Create event for the specified date or default to now + 1 hour
+   
     const startDate = eventDate ? new Date(eventDate) : new Date();
     const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000); // +2 hours
 
@@ -50,11 +50,11 @@ async function createCalendarEvent(
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'email', minutes: 24 * 60 },   // 1 day before
-          { method: 'popup', minutes: 30 }         // 30 mins before
+          { method: 'email', minutes: 24 * 60 },  
+          { method: 'popup', minutes: 30 }         
         ],
       },
-      colorId: '2', // Green color for success
+      colorId: '2', 
     };
 
     const response = await calendar.events.insert({
@@ -82,16 +82,16 @@ export async function POST(request: NextRequest) {
     const { 
       to, 
       eventTitle, 
-      eventDate, // Optional: specific date for the event
+      eventDate, 
       txHash, 
       contractAddress, 
       userAddress, 
       openseaLink, 
       etherscanLink,
-      accessToken, // Google OAuth access token
+      accessToken, 
     } = await request.json();
 
-    // Validate required fields
+    
     if (!to || !eventTitle || !txHash) {
       return NextResponse.json(
         { success: false, error: 'Missing required fields: to, eventTitle, or txHash' },
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create calendar event if accessToken is provided
+    
     let calendarResult = null;
     if (accessToken) {
       console.log('Creating calendar event...');
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       console.log('Calendar result:', calendarResult);
     }
 
-    // Enhanced email HTML with calendar integration
+    
     const emailHtml = `
       <!DOCTYPE html>
       <html>
@@ -324,7 +324,7 @@ export async function POST(request: NextRequest) {
       </html>
     `;
 
-    // Send email using Resend
+   
     const { error } = await resend.emails.send({
       from: 'onboarding@resend.dev',
       to: [to],
@@ -340,7 +340,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Return comprehensive response
+    
     return NextResponse.json({ 
       success: true, 
       message: 'NFT email sent successfully',

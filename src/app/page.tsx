@@ -1,4 +1,4 @@
-import EventsPage from "./components/EventsPage"; // Update the path as needed
+import EventsPage from "./components/EventsPage"; 
 
 const Page = async () => {
   return (
@@ -6,12 +6,12 @@ const Page = async () => {
       <div className="flex flex-col items-center justify-center gap-8 p-4">
       </div>
 
-      {/* Events Section */}
+      
       <div className="bg-white dark:bg-gray-900 px-4 py-8">
         <EventsPage />
       </div>
 
-      {/* Footer */}
+      
       <footer className="text-center text-sm text-slate-600 dark:text-slate-400 mt-auto py-4">
         <p>©2025 Civic Technologies, Inc. All Rights Reserved</p>
       </footer>

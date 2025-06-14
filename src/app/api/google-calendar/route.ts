@@ -17,13 +17,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Missing accessToken or userEmail' }, { status: 400 });
     }
 
-    // Initialize OAuth2Client
+   
     const oauth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
     oauth2Client.setCredentials({ access_token: accessToken });
 
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
-    // Define the calendar event
+    
     const event = {
       summary: `${eventTitle} - NFT Attendance`,
       description: `Your proof of attendance NFT was minted.\n\nTxHash: ${txHash}\nContract: ${contractAddress}`,
@@ -39,13 +39,13 @@ export async function POST(request: NextRequest) {
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'email', minutes: 24 * 60 },   // 1 day before
-          { method: 'popup', minutes: 30 }         // 30 mins before
+          { method: 'email', minutes: 24 * 60 },   
+          { method: 'popup', minutes: 30 }         
         ],
       },
     };
 
-    // Insert event into user's primary calendar
+    
     const response = await calendar.events.insert({
       calendarId: 'primary',
       requestBody: event,
