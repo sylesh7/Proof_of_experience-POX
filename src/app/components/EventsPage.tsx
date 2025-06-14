@@ -236,7 +236,7 @@ const EventsPage = () => {
               <div className="mt-8">
                 <h3 className="text-xl font-semibold text-white mb-4">Event Schedule</h3>
                 <div className="space-y-3">
-                  {selectedEventData?.title === "Cowork with ETHGlobal in Oxford with Oxford Blockchain Society" && (
+                  {selectedEventData?.title === "Cowork with ETHGlobal - Blockchain Society" && (
                     <>
                       <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
                         <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
@@ -401,6 +401,30 @@ const EventsPage = () => {
                       <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
                         <div className="flex-shrink-0 w-24 text-blue-400 font-medium">4:00 PM</div>
                         <div className="text-gray-300">Closing Remarks - Next steps and resources</div>
+                      </div>
+                    </>
+                  )}
+                  {!selectedEventData?.title && (
+                    <>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:00 AM</div>
+                        <div className="text-gray-300">Registration & Welcome</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">10:30 AM</div>
+                        <div className="text-gray-300">Event Activities Begin</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">12:30 PM</div>
+                        <div className="text-gray-300">Lunch Break</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">1:30 PM</div>
+                        <div className="text-gray-300">Main Event Activities</div>
+                      </div>
+                      <div className="flex items-start gap-4 bg-gray-700/50 p-3 rounded-lg">
+                        <div className="flex-shrink-0 w-24 text-blue-400 font-medium">3:00 PM</div>
+                        <div className="text-gray-300">Closing Remarks</div>
                       </div>
                     </>
                   )}
