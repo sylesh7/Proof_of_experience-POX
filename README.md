@@ -71,23 +71,21 @@ PoX solves this by:
 
 ### 1. Clone the Repository
 
+
 git clone https://github.com/YOUR_USERNAME/poxwallet.git
 cd poxwallet
-2. Create .env.local File
-env
-Copy
-Edit
+
+### 2. Create .env.local File
+
 NEXT_PUBLIC_CLIENT_ID=<your_civic_client_id>
 RESEND_API_KEY=<your_resend_api_key>
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=<your_google_client_id>
 GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/callback/google
-3. Install Dependencies
-bash
-Copy
-Edit
+
+### 3. Install Dependencies
+
 yarn
-4. Run Locally
-bash
-Copy
-Edit
+
+### 4. Run Locally
+
 yarn dev
