@@ -8,18 +8,43 @@ import StyledEventCard from './StyledEventCard';
 import { Web3Zone, TICKET_PRICE } from './web3Zone';
 
 // ✅ Navbar Component
+// ✅ Enhanced Navbar Component
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-gray-950 border-b border-gray-800 py-4 px-6 flex items-center justify-between shadow-md">
-      <div className="flex items-center gap-3 px-4 py-2 rounded-md bg-gray-900 hover:bg-gray-800 transition-all duration-200">
-        <Image src="/Pox Logo.jpg" alt="PoxWallet Logo" width={36} height={36} className="rounded-full" />
-        <span className="text-xl md:text-2xl font-semibold text-white">
-          PoxWallet
-        </span>
-      </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-2xl border-b border-gray-100">
+      <div className="container mx-auto px-8">
+        <div className="flex h-20 items-center justify-between">
+          {/* Logo with floating effect */}
+          <div className="flex items-center space-x-3">
+            <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/30">
+              <Image 
+                src="/Pox Logo.jpg" 
+                alt="PoxWallet Logo" 
+                fill
+                className="rounded-xl object-cover p-1"
+              />
+            </div>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              PoxWallet
+            </span>
+          </div>
 
-      <div className="px-3 py-1.5 rounded-full border border-gray-700 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-md transition-all duration-150">
-        <UserButton />
+
+          {/* User section with floating effect */}
+          <div className="flex items-center space-x-4">
+            
+            
+            <div className="relative group">
+              <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
+                <UserButton />
+                <span className="font-medium text-gray-700">Account</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500 group-hover:rotate-180 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
   );
@@ -37,7 +62,7 @@ const EventsPage = () => {
       month: "JUN",
       day: "12",
       weekday: "Thu",
-      title: "Cowork with ETHGlobal in Oxford with Oxford Blockchain Society",
+      title: "Cowork with ETHGlobal - Blockchain Society",
       location: "Oxford, United Kingdom",
       type: "Co-Working",
       temperature: "22°C",
