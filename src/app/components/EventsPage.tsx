@@ -6,33 +6,158 @@ import { UserButton } from '@civic/auth-web3/react';
 import StyledButton from './StyledButton';
 import StyledEventCard from './StyledEventCard';
 import { Web3Zone, TICKET_PRICE } from './web3Zone';
+import styled from 'styled-components';
+import { useRouter } from 'next/navigation';
 
+const StyledLogoButton = styled.div`
+  .brutalist-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 169px;
+    height: 60px;
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    border: 3px solid #fff;
+    outline: 3px solid #000;
+    box-shadow: 6px 6px 0 #00a4ef;
+    transition: all 0.1s ease-out;
+    padding: 0 15px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .brutalist-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
+    z-index: 1;
+    transition: none;
+    opacity: 0;
+  }
+
+  @keyframes slide {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
+  .brutalist-button:hover::before {
+    opacity: 1;
+    animation: slide 2s infinite;
+  }
+
+  .brutalist-button:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 10px 10px 0 #000;
+    background-color: #000;
+    color: #fff;
+  }
+
+  .brutalist-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0 #00a4ef;
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-image {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.2s ease-out;
+  }
+
+  .brutalist-button:hover .logo-image {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  .brutalist-button:active .logo-image {
+    transform: rotate(10deg) scale(0.9);
+  }
+
+  .button-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    transition: transform 0.2s ease-out;
+  }
+
+  .brutalist-button:hover .button-text {
+    transform: skew(-5deg);
+  }
+
+  .brutalist-button:active .button-text {
+    transform: skew(5deg);
+  }
+
+  .button-text span:first-child {
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .button-text span:last-child {
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+`;
 
 const Navbar: React.FC = () => {
+  const router = useRouter();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-2xl border-b border-gray-100">
       <div className="container mx-auto px-8">
         <div className="flex h-20 items-center justify-between">
-          {/* Logo with floating effect */}
-          <div className="flex items-center space-x-3">
-            <div className="relative h-12 w-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg transform transition-all hover:scale-105 hover:shadow-blue-500/30">
-              <Image 
-                src="/Pox Logo.jpg" 
-                alt="PoxWallet Logo" 
-                fill
-                className="rounded-xl object-cover p-1"
-              />
-            </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-              PoxWallet
-            </span>
-          </div>
-
+          {/* Logo with brutalist button style */}
+          <StyledLogoButton>
+            <button 
+              className="brutalist-button"
+              onClick={() => router.push('/')}
+            >
+              <div className="logo-container">
+                <div className="logo-image">
+                  <Image 
+                    src="/Pox Logo.jpg" 
+                    alt="PoxWallet Logo" 
+                    width={26}
+                    height={26}
+                    className="object-cover"
+                  />
+                </div>
+                <div className="button-text">
+                  <span>PoxWallet</span>
+                </div>
+              </div>
+            </button>
+          </StyledLogoButton>
 
           {/* User section with floating effect */}
           <div className="flex items-center space-x-4">
-            
-            
             <div className="relative group">
               <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
                 <UserButton />
@@ -44,7 +169,6 @@ const Navbar: React.FC = () => {
     </nav>
   );
 };
-
 
 const EventsPage = () => {
   const [showMinter, setShowMinter] = useState(false);
@@ -62,7 +186,7 @@ const EventsPage = () => {
       type: "Co-Working",
       temperature: "22°C",
       daysAhead: "Rating days ahead",
-      image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover1.png",
       description: "Join us for an exciting co-working session with ETHGlobal and Oxford Blockchain Society. Network with blockchain enthusiasts, developers, and researchers while working on your projects in a collaborative environment. Perfect for those looking to connect with the Web3 community in Oxford."
     },
     {
@@ -75,7 +199,7 @@ const EventsPage = () => {
       type: "Summit",
       temperature: "28°C",
       daysAhead: "43 days ahead",
-      image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover2.png",
       description: "The premier conference exploring the intersection of AI and blockchain technology. Featuring keynote speakers, panel discussions, and workshops on the latest developments in decentralized AI, smart contracts, and Web3 infrastructure. Don't miss this opportunity to learn from industry leaders."
     },
     {
@@ -88,7 +212,7 @@ const EventsPage = () => {
       type: "Hackathon",
       temperature: "24°C",
       daysAhead: "50 days ahead",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover3.png",
       description: "A 48-hour hackathon focused on building sustainable technology solutions using blockchain. Teams will work on projects addressing climate change, renewable energy, and sustainable supply chains. Prizes include funding opportunities and mentorship from leading sustainability experts."
     },
     {
@@ -101,7 +225,7 @@ const EventsPage = () => {
       type: "Meetup",
       temperature: "20°C",
       daysAhead: "95 days ahead",
-      image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover1.png",
       description: "A casual meetup for Web3 developers to share knowledge, discuss best practices, and network. Topics include smart contract development, dApp architecture, and the latest trends in decentralized technology. Perfect for both beginners and experienced developers."
     },
     {
@@ -114,7 +238,7 @@ const EventsPage = () => {
       type: "Competition",
       temperature: "26°C",
       daysAhead: "115 days ahead",
-      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover2.png",
       description: "Showcase your Web3 startup to a panel of investors and industry experts. Pitch your innovative blockchain solution and compete for funding, mentorship, and networking opportunities. Open to early-stage startups in the blockchain and Web3 space."
     },
     {
@@ -127,11 +251,10 @@ const EventsPage = () => {
       type: "Workshop",
       temperature: "-",
       daysAhead: "151 days ahead",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2070&q=80",
+      image: "/Cover3.png",
       description: "An intensive workshop covering advanced React concepts for Web3 development. Learn about state management, performance optimization, and building responsive dApp interfaces. Hands-on exercises and real-world examples included. Suitable for intermediate to advanced React developers."
     }
   ];
-
 
   useEffect(() => {
     const preloadImages = async () => {
@@ -165,7 +288,6 @@ const EventsPage = () => {
     setShowMinter(false);
     setSelectedEvent('');
   };
-
 
   if (showMinter) {
     const selectedEventData = events.find(event => event.title === selectedEvent);
@@ -444,7 +566,6 @@ const EventsPage = () => {
       </>
     );
   }
-
 
   return (
     <>

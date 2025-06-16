@@ -39,9 +39,9 @@ const StyledEventCard: React.FC<EventCardProps> = ({ event, onRegister }) => {
             quality={100}
           />
           <div className="card__date">
-            <p className="text-sm">{event.month}</p>
-            <p className="text-4xl font-bold">{event.day}</p>
-            <p className="text-sm">{event.weekday}</p>
+            <span className="date-month">{event.month}</span>
+            <span className="date-day">{event.day}</span>
+            <span className="date-weekday">{event.weekday}</span>
           </div>
         </div>
         <div className="card__content">
@@ -99,12 +99,36 @@ const StyledWrapper = styled.div`
 
   .card__date {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 12px;
+    left: 12px;
     background: rgba(0, 0, 0, 0.7);
     color: white;
-    padding: 1rem;
-    z-index: 1;
+    padding: 0.3rem 0.7rem;
+    border-radius: 20px;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .date-month {
+    font-size: 0.95em;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .date-day {
+    font-size: 1.2em;
+    font-weight: 900;
+    margin: 0 0.2em;
+  }
+  .date-weekday {
+    font-size: 0.95em;
+    font-weight: 400;
+    opacity: 0.85;
   }
 
   .card__content {
@@ -180,4 +204,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default StyledEventCard; 
+export default StyledEventCard;
