@@ -555,10 +555,13 @@ const EventsPage = () => {
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-blue-600">
-                Complete your registration by minting an NFT ticket below
-              </p>
+            {/* Message Box */}
+            <div className="max-w-md mx-auto mb-8">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-blue-800 text-sm text-center">
+                  Complete your registration by minting an NFT ticket below
+                </p>
+              </div>
             </div>
           </div>
 

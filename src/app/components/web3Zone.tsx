@@ -528,174 +528,177 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
   const hasInsufficientBalance = balance.data && parseEther(TICKET_PRICE) > balance.data.value;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Minting Form */}
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border-2 border-blue-100 dark:border-blue-800">
-        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white flex items-center">
-          🎫 Mint Event Attendance NFT
-          <span className="ml-auto text-sm font-normal bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
-            {TICKET_PRICE} ETH
-          </span>
-        </h3>
-        
-        {/* Network Warning */}
-        {!isOnSepolia && (
-          <div className="bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-4">
-            <div className="flex items-center">
-              <span className="text-yellow-600 dark:text-yellow-400 mr-2">⚠️</span>
-              <div>
-                <p className="font-medium text-yellow-800 dark:text-yellow-200">Wrong Network</p>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  Please switch to Ethereum Sepolia testnet to mint NFTs
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Balance Warning */}
-        {hasInsufficientBalance && (
-          <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4">
-            <div className="flex items-center">
-              <span className="text-red-600 dark:text-red-400 mr-2">💰</span>
-              <div>
-                <p className="font-medium text-red-800 dark:text-red-200">Insufficient Balance</p>
-                <p className="text-sm text-red-700 dark:text-red-300">
-                  You need at least {TICKET_PRICE} ETH to mint. Current balance: {balance.data ? formatEther(balance.data.value) : '0'} ETH
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div className="space-y-4">
-          {/* Event Title Input */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Event Title *
-            </label>
-            <input
-              type="text"
-              value={eventTitle}
-              onChange={(e) => setEventTitle(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter event name (e.g., DevCon 2024, Web3 Summit)"
-              maxLength={50}
-            />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              This will appear on your NFT ticket
-            </p>
-          </div>
-
-          {/* Minting Method Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Contract Function
-            </label>
-            <select
-              value={mintingMethod}
-              onChange={(e) => setMintingMethod(e.target.value as "safeMint" | "claim")}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="safeMint">safeMint (Custom Contract)</option>
-              <option value="claim">claim (ThirdWeb Contract)</option>
-            </select>
-          </div>
-
-          {/* Contract Address Display */}
-          <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-            <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Contract Address:</p>
-            <div className="flex items-center justify-between">
-              <p className="font-mono text-sm text-gray-800 dark:text-gray-200 break-all">
-                {EVENT_TICKET_CONTRACT}
-              </p>
-              {isValidContract && (
-                <span className="text-green-500 text-xs ml-2">✅ Ready</span>
-              )}
-            </div>
-            {isValidContract && (
-              <a
-                href={`${SEPOLIA_CONFIG.blockExplorer}/address/${EVENT_TICKET_CONTRACT}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                View on Etherscan →
-              </a>
-            )}
-          </div>
-          
-          {/* Mint Button */}
-          <StyledButton
-            onClick={mintEventTicket}
-            disabled={
-              !eventTitle.trim() || 
-              isMinting || 
-              isConfirming || 
-              !isOnSepolia ||
-              !isValidContract ||
-              hasInsufficientBalance
-            }
-          >
-            {isMinting || isConfirming ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                {isMinting ? 'Submitting Transaction...' : 'Confirming on Blockchain...'}
-              </div>
-            ) : (
-              `Register`
-            )}
-          </StyledButton>
-
-          {/* Error Display */}
-          {mintError && (
-            <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4">
-              <div className="flex items-start">
-                <span className="text-red-500 mr-2">❌</span>
-                <div>
-                  <p className="font-medium text-red-800 dark:text-red-200">Minting Failed</p>
-                  <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-                    {mintError.message.includes('User rejected') 
-                      ? 'Transaction was cancelled by user'
-                      : 'Contract call failed. Check contract address and network.'}
-                  </p>
+      <div className="max-w-2xl mx-auto">
+        <div className="w-full bg-white border-[6px] border-black shadow-[12px_12px_0_#000] hover:shadow-[17px_17px_0_#000] hover:-translate-x-[5px] hover:-translate-y-[5px] transition-all duration-300">
+          <div className="p-6">
+            <h3 className="text-2xl font-black text-black uppercase mb-4 relative overflow-hidden">
+              Mint Event Attendance NFT
+              <span className="absolute bottom-0 left-0 w-[90%] h-[3px] bg-black -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+            </h3>
+            
+            {/* Network Warning */}
+            {!isOnSepolia && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                <div className="flex items-center">
+                  <span className="text-yellow-600 mr-2">⚠️</span>
+                  <div>
+                    <p className="font-medium text-yellow-800 text-sm">Wrong Network</p>
+                    <p className="text-xs text-yellow-700">
+                      Please switch to Ethereum Sepolia testnet to mint NFTs
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Success Display */}
-          {mintTxHash && (
-            <div className="bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
-              <div className="flex items-start">
-                <span className="text-green-500 mr-2">✅</span>
-                <div className="flex-1">
-                  <p className="font-medium text-green-800 dark:text-green-200">
-                    {isConfirmed ? 'NFT Minted Successfully!' : 'Transaction Submitted'}
+            {/* Balance Warning */}
+            {hasInsufficientBalance && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
+                <div className="flex items-center">
+                  <span className="text-red-600 mr-2">💰</span>
+                  <div>
+                    <p className="font-medium text-red-800 text-sm">Insufficient Balance</p>
+                    <p className="text-xs text-red-700">
+                      You need at least {TICKET_PRICE} ETH to mint. Current balance: {balance.data ? formatEther(balance.data.value) : '0'} ETH
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div className="space-y-3">
+              {/* Event Title Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Event Title *
+                </label>
+                <input
+                  type="text"
+                  value={eventTitle}
+                  onChange={(e) => setEventTitle(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  placeholder="Enter event name (e.g., DevCon 2024, Web3 Summit)"
+                  maxLength={50}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  This will appear on your NFT ticket
+                </p>
+              </div>
+
+              {/* Minting Method Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Contract Function
+                </label>
+                <select
+                  value={mintingMethod}
+                  onChange={(e) => setMintingMethod(e.target.value as "safeMint" | "claim")}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-black focus:ring-2 focus:ring-blue-500 text-sm"
+                >
+                  <option value="safeMint">safeMint (Custom Contract)</option>
+                  <option value="claim">claim (ThirdWeb Contract)</option>
+                </select>
+              </div>
+
+              {/* Contract Address Display */}
+              <div className="bg-gray-50 p-2 rounded-lg">
+                <p className="text-xs font-medium text-gray-600 mb-1">Contract Address:</p>
+                <div className="flex items-center justify-between">
+                  <p className="font-mono text-xs text-black break-all">
+                    {EVENT_TICKET_CONTRACT}
                   </p>
-                  <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                    Transaction Hash:
-                  </p>
-                  <a
-                    href={`${SEPOLIA_CONFIG.blockExplorer}/tx/${mintTxHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-mono text-xs text-green-600 dark:text-green-400 hover:underline break-all"
-                  >
-                    {mintTxHash}
-                  </a>
-                  
-                  {isConfirmed && (
-                    <div className="mt-2 pt-2 border-t border-green-200 dark:border-green-700">
-                      <p className="text-sm text-green-700 dark:text-green-300">
-                        🎉 Your attendance NFT is now in your wallet! Check below to see it.
-                      </p>
-                    </div>
+                  {isValidContract && (
+                    <span className="text-green-500 text-xs ml-2">✅ Ready</span>
                   )}
                 </div>
+                {isValidContract && (
+                  <a
+                    href={`${SEPOLIA_CONFIG.blockExplorer}/address/${EVENT_TICKET_CONTRACT}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 hover:underline"
+                  >
+                    View on Etherscan →
+                  </a>
+                )}
               </div>
+              
+              {/* Mint Button */}
+              <StyledButton
+                onClick={mintEventTicket}
+                disabled={
+                  !eventTitle.trim() || 
+                  isMinting || 
+                  isConfirming || 
+                  !isOnSepolia ||
+                  !isValidContract ||
+                  hasInsufficientBalance
+                }
+                className="w-full"
+              >
+                {isMinting || isConfirming ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    {isMinting ? 'Submitting Transaction...' : 'Confirming on Blockchain...'}
+                  </div>
+                ) : (
+                  `Register`
+                )}
+              </StyledButton>
+
+              {/* Error Display */}
+              {mintError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="flex items-start">
+                    <span className="text-red-500 mr-2">❌</span>
+                    <div>
+                      <p className="font-medium text-red-800 text-sm">Minting Failed</p>
+                      <p className="text-xs text-red-700 mt-1">
+                        {mintError.message.includes('User rejected') 
+                          ? 'Transaction was cancelled by user'
+                          : 'Contract call failed. Check contract address and network.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Success Display */}
+              {mintTxHash && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div className="flex items-start">
+                    <span className="text-green-500 mr-2"></span>
+                    <div className="flex-1">
+                      <p className="font-medium text-green-800 text-sm">
+                        {isConfirmed ? 'NFT Minted Successfully!' : 'Transaction Submitted'}
+                      </p>
+                      <p className="text-xs text-green-700 mt-1">
+                        Transaction Hash:
+                      </p>
+                      <a
+                        href={`${SEPOLIA_CONFIG.blockExplorer}/tx/${mintTxHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-mono text-xs text-green-600 hover:underline break-all"
+                      >
+                        {mintTxHash}
+                      </a>
+                      
+                      {isConfirmed && (
+                        <div className="mt-2 pt-2 border-t border-green-200">
+                          <p className="text-xs text-green-700">
+                            🎉 Your attendance NFT is now in your wallet! Check below to see it.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 
@@ -704,10 +707,10 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
       
       {/* Success messages */}
       {isEmailSent && (
-        <div className="mt-4 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg p-4">
+        <div className="mt-3 bg-green-50 border border-green-200 rounded-lg p-3">
           <div className="flex items-center">
             <span className="text-green-500 mr-2">✅</span>
-            <p className="text-green-800 dark:text-green-200">
+            <p className="text-green-800 text-sm">
               Ticket sent to your email successfully!
             </p>
           </div>
@@ -716,8 +719,8 @@ function NFTMinter({ prefilledEventTitle }: { prefilledEventTitle?: string }) {
       
       {/* Minted NFTs Display */}
       {mintedNFTs.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold text-black">
             🎨 Your Minted NFTs ({mintedNFTs.length})
           </h3>
           {mintedNFTs.map((nft, index) => (
@@ -747,37 +750,42 @@ function WalletInfo() {
   if (!isConnected) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
-        💰 Wallet Information
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Network:</span>
-            <span className="ml-2 text-gray-900 dark:text-white">
-              {chain?.name || "Unknown"}
-            </span>
-          </div>
-          <div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Address:</span>
-            <span className="ml-2 font-mono text-sm text-gray-900 dark:text-white break-all">
-              {address}
-            </span>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Balance:</span>
-            <span className="ml-2 text-gray-900 dark:text-white font-mono">
-              {formatBalanceEth(balance?.data?.value)} ETH
-            </span>
-          </div>
-          <div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Ticket Price:</span>
-            <span className="ml-2 text-gray-900 dark:text-white font-mono">
-              {TICKET_PRICE} ETH
-            </span>
+    <div className="max-w-2xl mx-auto">
+      <div className="w-full bg-white border-[6px] border-black shadow-[12px_12px_0_#000] hover:shadow-[17px_17px_0_#000] hover:-translate-x-[5px] hover:-translate-y-[5px] transition-all duration-300">
+        <div className="p-6">
+          <h3 className="text-2xl font-black text-black uppercase mb-4 relative overflow-hidden">
+            Wallet Information
+            <span className="absolute bottom-0 left-0 w-[90%] h-[3px] bg-black -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div>
+                <span className="text-sm font-medium text-gray-600">Network:</span>
+                <span className="ml-2 text-black">
+                  {chain?.name || "Unknown"}
+                </span>
+              </div>
+              <div>
+                <span className="text-sm font-medium text-gray-600">Address:</span>
+                <span className="ml-2 font-mono text-sm text-black break-all">
+                  {address}
+                </span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div>
+                <span className="text-sm font-medium text-gray-600">Balance:</span>
+                <span className="ml-2 text-black font-mono">
+                  {formatBalanceEth(balance?.data?.value)} ETH
+                </span>
+              </div>
+              <div>
+                <span className="text-sm font-medium text-gray-600">Ticket Price:</span>
+                <span className="ml-2 text-black font-mono">
+                  {TICKET_PRICE} ETH
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
