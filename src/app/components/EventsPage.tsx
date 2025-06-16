@@ -151,7 +151,6 @@ const Navbar: React.FC = () => {
                   />
                 </div>
                 <div className="button-text">
-                  <span>Powered by</span>
                   <span>PoxWallet</span>
                 </div>
               </div>
