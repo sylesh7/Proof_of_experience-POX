@@ -58,12 +58,12 @@ PoX solves this by:
 
 ##  Tech Stack
 
-- **Frontend**: Next.js, TypeScript, Tailwind CSS  
-- **Auth & Wallets**: `@civic/auth-web3`  
-- **Calendar Sync**: Google Calendar API  
-- **Email**: Resend API  (To get: https://resend.com/api-keys)
-- **Smart Contract**: Solidity (EVM compatible)  
-- **Contract Address**: [`0xd9145CCE52D386f254917e481eB44e9943F39138`](https://etherscan.io/address/0xd9145CCE52D386f254917e481eB44e9943F39138)
+- **Frontend** : Next.js, TypeScript, Tailwind CSS  
+- **Auth & Wallets** : `@civic/auth-web3`  
+- **Calendar Sync** : Google Calendar API  
+- **Email** : Resend API  (To get: https://resend.com/api-keys)
+- **Smart Contract** : Solidity (EVM compatible)  
+- **Contract Address** : [`0xd9145CCE52D386f254917e481eB44e9943F39138`](https://etherscan.io/address/0xd9145CCE52D386f254917e481eB44e9943F39138)
 
 ---
 
@@ -83,6 +83,8 @@ NEXT_PUBLIC_CLIENT_ID=<your_civic_client_id>
 RESEND_API_KEY=<your_resend_api_key>
 
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=<your_google_client_id>
+
+GOOGLE_REDIRECT_URI="http://localhost:3000/api/auth/callback/google"
 
 
 ### 3. Install Dependencies
