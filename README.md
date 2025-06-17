@@ -30,22 +30,22 @@ PoX solves this by:
 
 ##  Features
 
-- ** Civic Auth Integration**  
+- **Civic Auth Integration**  
   Frictionless login without wallets or extensions.
   
-- ** NFT Ticket Minting**  
+- **NFT Ticket Minting**  
   Tamper-proof, soulbound NFT credentials on-chain.
 
-- ** Calendar Auto-Sync**  
+- **Calendar Auto-Sync**  
   Automatically adds events to the user’s Google Calendar.
 
-- ** Gmail Proof Delivery**  
+- **Gmail Proof Delivery**  
   Mints NFT → sends metadata and tx hash to Gmail instantly.
 
-- ** On-Chain Experience Badges**  
+- **On-Chain Experience Badges**  
   Web3-native resume for real and virtual participation.
 
-- ** No Wallet Required**  
+- **No Wallet Required**  
   Embedded wallet experience for everyone — crypto-savvy or not.
 
 ---
@@ -71,10 +71,11 @@ PoX solves this by:
 
 ### 1. Clone the Repository
 
+``` bash
+git clone https://github.com/sylesh7/Proof_of_experience-POX.git
+cd Proof_of_experience-POX
 
-git clone https://github.com/YOUR_USERNAME/poxwallet.git
-
-cd poxwallet
+```
 
 ### 2. Create .env.local File
 
@@ -89,8 +90,12 @@ GOOGLE_REDIRECT_URI="http://localhost:3000/api/auth/callback/google"
 
 ### 3. Install Dependencies
 
+``` bash
 yarn
+```
 
 ### 4. Run Locally
 
+``` bash
 yarn dev
+```
