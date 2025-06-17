@@ -226,7 +226,7 @@ const EventsPage = () => {
       type: "Meetup",
       temperature: "20°C",
       daysAhead: "95 days ahead",
-      image: "/Cover1.png",
+      image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=2070&q=80",
       description: "A casual meetup for Web3 developers to share knowledge, discuss best practices, and network. Topics include smart contract development, dApp architecture, and the latest trends in decentralized technology. Perfect for both beginners and experienced developers."
     },
     {
@@ -239,7 +239,7 @@ const EventsPage = () => {
       type: "Competition",
       temperature: "26°C",
       daysAhead: "115 days ahead",
-      image: "/Cover2.png",
+      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=2070&q=80",
       description: "Showcase your Web3 startup to a panel of investors and industry experts. Pitch your innovative blockchain solution and compete for funding, mentorship, and networking opportunities. Open to early-stage startups in the blockchain and Web3 space."
     },
     {
@@ -252,7 +252,7 @@ const EventsPage = () => {
       type: "Workshop",
       temperature: "-",
       daysAhead: "151 days ahead",
-      image: "/Cover3.png",
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2070&q=80",
       description: "An intensive workshop covering advanced React concepts for Web3 development. Learn about state management, performance optimization, and building responsive dApp interfaces. Hands-on exercises and real-world examples included. Suitable for intermediate to advanced React developers."
     }
   ];
