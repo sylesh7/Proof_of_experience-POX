@@ -79,14 +79,12 @@ cd Proof_of_experience-POX
 
 ### 2. Create .env.local File
 
+``` bash
 NEXT_PUBLIC_CLIENT_ID=<your_civic_client_id>
-
 RESEND_API_KEY=<your_resend_api_key>
-
 NEXT_PUBLIC_GOOGLE_CLIENT_ID=<your_google_client_id>
-
 GOOGLE_REDIRECT_URI="http://localhost:3000/api/auth/callback/google"
-
+```
 
 ### 3. Install Dependencies
 
